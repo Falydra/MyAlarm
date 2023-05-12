@@ -10,11 +10,15 @@ import {
   CloseButton,
   Container,
   FormControl,
+  Text,
   FormLabel,
   FormErrorMessage,
   FormHelperText,
+  Input,
+  VStack,
+  HStack,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 type NotificationT = {
   title: string;
   message: string;
@@ -45,27 +49,35 @@ const Notification = ({ title, message, onClose }: NotificationT) => {
 
 const App = () => {
   const [showNotification, setShowNotification] = useState(false);
-
-  setInterval(() => {
-    if (new Date().getMinutes() === 18) {
-      setShowNotification(true);
-    }
-  }, 1000);
+  const [jam, setJam] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   return (
     <>
       <Container h="full" py={8}>
-        <h1>Simple Alarm</h1>
+        <Text fontSize="3xl" fontWeight="bold">
+          Alarm Madura
+        </Text>
 
-        <Button onClick={() => setShowNotification((state) => !state)}>
-          Show
-        </Button>
-
+        <FormControl isRequired>
+          <VStack maxW="64" align="start">
+            <HStack justify="between" w="full">
+              <FormLabel>Jam</FormLabel>
+              <Input onChange={(e) => setJam(e.target.value)} type="time" />
+            </HStack>
+            <HStack justify="between" w="full">
+              <FormLabel>Message</FormLabel>
+              <Input onChange={(e) => setMessage(e.target.value)} />
+            </HStack>
+            <Button onClick={() => console.log(jam)}>Set</Button>
+          </VStack>
+        </FormControl>
         {showNotification && (
           <Notification
             title="Alarm"
             message="Bangun Bang"
-            onClose={() => undefined}
+            onClose={() => setShowNotification(!showNotification)}
           />
         )}
       </Container>
